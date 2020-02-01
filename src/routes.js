@@ -14,6 +14,7 @@ routes.post('/sessions', sessionController.store);
 //apenas logado
 routes.post('/destinos', authMiddleware, destinosController.store);
 //apenas logado e atualizado via id
+routes.put('/destinos/:id', authMiddleware, destinosController.update);
 //routes.put('/recipients/:id', updateRecipients);
 
 export default routes;

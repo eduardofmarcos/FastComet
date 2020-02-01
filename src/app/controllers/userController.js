@@ -14,7 +14,7 @@ class UserController {
         .required()
         .min(5)
     });
-/**creating new user **/
+    /**creating new user **/
 
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({
@@ -40,9 +40,5 @@ class UserController {
       email
     });
   }
-
-  /**updating a user **/
-  
 }
-
 export default new UserController();
