@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('recipient', {
+    return queryInterface.createTable('deliverymen', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -13,29 +13,17 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      street: {
+      email: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
-      number: {
+      avatar_id:{
         type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      complement: {
-        type: Sequelize.STRING,
+        references: { model: 'files', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
         allowNull: true
-      },
-      state: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      city: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      CEP: {
-        type: Sequelize.INTEGER,
-        allowNull: false
       },
       created_at: {
         type: Sequelize.DATE,
@@ -49,6 +37,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('recipient');
+    return queryInterface.createTable('deliverymen');
   }
 };

@@ -1,8 +1,8 @@
-import Deliveriesmen from './../models/Deliveriesmen';
+import Deliverymen from './../models/Deliverymen';
 
-class Delieveresman {
+class DeliverymenController {
   async index(req, res) {
-    const allDeli = await Deliveriesmen.findAll();
+    const allDeli = await Deliverymen.findAll();
     return res.status(200).json({
       message: allDeli
     });
@@ -10,14 +10,14 @@ class Delieveresman {
 
   async store(req, res) {
     const deliData = req.body;
-    const newDeli = await Deliveriesmen.create(deliData);
+    const newDeli = await Deliverymen.create(deliData);
     return res.status(200).json(newDeli);
   }
 
   async update(req, res) {
     const deliId = req.params.id;
 
-    const deliToUpdate = await Deliveriesmen.findByPk(deliId);
+    const deliToUpdate = await Deliverymen.findByPk(deliId);
 
     const deliUpdated = await deliToUpdate.update(req.body);
     return res.status(200).json({
@@ -27,7 +27,7 @@ class Delieveresman {
 
   async delete(req, res) {
     const deliId = req.params.id;
-    const deliToDelete = await Deliveriesmen.findByPk(deliId);
+    const deliToDelete = await Deliverymen.findByPk(deliId);
 
     const deliDeleted = await deliToDelete.destroy();
     return res.status(200).json({
@@ -36,4 +36,4 @@ class Delieveresman {
   }
 }
 
-export default new Delieveresman();
+export default new DeliverymenController();

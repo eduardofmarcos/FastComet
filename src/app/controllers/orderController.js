@@ -1,4 +1,4 @@
-import Deliveriesmen from './../models/Deliveriesmen';
+//import Deliveriesmen from './../models/Deliveriesmen';
 
 class Order {
   async index(req, res) {
