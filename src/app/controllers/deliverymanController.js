@@ -1,7 +1,7 @@
 import Deliverymen from './../models/Deliverymen';
 import Orders from './../models/Orders';
 import { Op } from 'sequelize';
-import { parseISO } from 'date-fns';
+import * as Yup from 'yup';
 
 class DeliverymanController {
   async index(req, res) {
@@ -34,31 +34,26 @@ class DeliverymanController {
     return res.status(200).json(deliveryMan);
   }
 
-  async store(req, res) {
-    const deliData = req.body;
-    const newDeli = await Deliverymen.create(deliData);
-    return res.status(200).json(newDeli);
-  }
-
   async update(req, res) {
-    const deliId = req.params.id;
+    const orderToUpdate = await Orders.findByPk(req.params.orderId);
 
-    const deliToUpdate = await Deliverymen.findByPk(deliId);
+    const dataToUpdate = req.body;
+    let schema;
+    if (req.body.end_date) {
+       schema = Yup.object().shape({
+        signature_id: Yup.number()
+          .integer()
+          .required()
+      });
+      if (!(await schema.isValid(dataToUpdate))) {
+        return res.status(400).json({ message: 'Need a valid signature' });
+      }
+    }
 
-    const deliUpdated = await deliToUpdate.update(req.body);
-    return res.status(200).json({
-      message: deliUpdated
-    });
-  }
+    
 
-  async delete(req, res) {
-    const deliId = req.params.id;
-    const deliToDelete = await Deliverymen.findByPk(deliId);
-
-    const deliDeleted = await deliToDelete.destroy();
-    return res.status(200).json({
-      message: deliDeleted
-    });
+    const orderUpdated = await orderToUpdate.update(dataToUpdate);
+    return res.status(200).json({ orderUpdated });
   }
 }
 
