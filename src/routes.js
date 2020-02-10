@@ -5,6 +5,7 @@ import sessionController from './app/controllers/sessionController';
 import deliverymenController from './app/controllers/deliverymenController';
 import deliverymanController from './app/controllers/deliverymanController';
 import filesController from './app/controllers/filesController';
+import filesSignController from './app/controllers/filesSignController';
 import orderController from './app/controllers/orderController';
 import orderProblemsController from './app/controllers/orderProblemsController';
 import multer from 'multer';
@@ -42,13 +43,18 @@ routes.get(
   '/deliveryman/:id/deliveries/delivered',
   deliverymanController.index
 );
+routes.post(
+  '/files/signatures/:orderId',
+  upload.single('file'),
+  filesSignController.store
+);
+
 routes.put(
   '/deliveryman/:id/deliveries/:orderId',
   deliverymanController.update
 );
 
 /** ORDERS**/
-routes.post('/files/signatures', upload.single('file'), filesController.store);
 
 routes.get('/orders', orderController.index);
 routes.post('/orders', orderController.store);

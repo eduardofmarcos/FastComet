@@ -1,7 +1,10 @@
 import Deliverymen from './../models/Deliverymen';
 import Orders from './../models/Orders';
+import Files from './../models/Files';
+import filesController from './../controllers/filesController';
 import { Op } from 'sequelize';
-import * as Yup from 'yup';
+import { startOfDay, endOfDay, parseISO } from 'date-fns';
+//import * as Yup from 'yup';
 
 class DeliverymanController {
   async index(req, res) {
@@ -35,26 +38,44 @@ class DeliverymanController {
   }
 
   async update(req, res) {
+    console.log(res.locals);
     const orderToUpdate = await Orders.findByPk(req.params.orderId);
+    const deliverymanId = req.params.id;
 
-    const dataToUpdate = req.body;
-    let schema;
-    if (req.body.end_date) {
-       schema = Yup.object().shape({
-        signature_id: Yup.number()
-          .integer()
-          .required()
+    const { start_date, end_date } = req.body;
+
+    //check quantity of retrievers
+    const checkQty = await Orders.count({
+      where: {
+        deliveryman_id: deliverymanId,
+        end_date: null,
+
+        start_date: {
+          [Op.between]: [startOfDay(new Date()), endOfDay(new Date())]
+        }
+      }
+    });
+    console.log(checkQty);
+    if (checkQty >= 5) {
+      return res.status(401).json({
+        message: 'You can not retrieve more than 5 parcels per day!'
       });
-      if (!(await schema.isValid(dataToUpdate))) {
-        return res.status(400).json({ message: 'Need a valid signature' });
+    }
+
+    //console.log(orderToUpdate);
+    if (req.body.end_date) {
+      if (!orderToUpdate.signature_id) {
+        return res.status(401).json({
+          message: 'To finish the delivey you need to send a signature'
+        });
       }
     }
 
-    
-
-    const orderUpdated = await orderToUpdate.update(dataToUpdate);
-    return res.status(200).json({ orderUpdated });
+    const orderUpdated = await orderToUpdate.update({
+      start_date,
+      end_date
+    });
+    return res.status(200).json(orderUpdated);
   }
 }
-
 export default new DeliverymanController();
