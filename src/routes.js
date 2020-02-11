@@ -63,6 +63,11 @@ routes.delete('/orders/:id', orderController.delete);
 
 /** ORDERS PROBLEMS**/
 routes.get('/orders/problems', orderProblemsController.index);
+routes.get('/orders/:id/problems', orderProblemsController.show);
 routes.post('/orders/:id/problems', orderProblemsController.store);
+routes.delete(
+  '/orders/:problemId/cancel-order',
+  orderProblemsController.delete
+);
 
 export default routes;
