@@ -26,6 +26,15 @@ class DeliverymenController {
       });
     }
 
+    const checkUniqueEmail = await Deliverymen.findOne({
+      where: { email: req.body.email }
+    });
+    if (checkUniqueEmail) {
+      return res.status(400).json({
+        message: 'This email is already registered!'
+      });
+    }
+
     const newDeli = await Deliverymen.create(deliData);
     return res.status(200).json(newDeli);
   }

@@ -27,6 +27,8 @@ export default async (req, res, next) => {
 
     if (checkUserExist) {
       next();
+    }else{
+      return res.status(401).json({message:"This user is no longer a admin!"})
     }
   } catch (error) {
     return res.status(401).json({
