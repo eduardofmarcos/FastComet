@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 //both methods (store and update)need to be loggged in
 
 class UserController {
+  /** creating new user **/
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
@@ -14,8 +15,7 @@ class UserController {
         .required()
         .min(5)
     });
-    /**creating new user **/
-
+    
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({
         message: 'Invalid Fields!'
@@ -32,9 +32,8 @@ class UserController {
     }
 
     const { id, name, email } = await User.create(req.body);
-    //console.log(newUser);
 
-    res.status(201).json({
+    return res.status(201).json({
       id,
       name,
       email

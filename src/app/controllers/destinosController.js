@@ -2,7 +2,7 @@ import Destinos from './../models/Destinos';
 import * as Yup from 'yup';
 
 class DestinosController {
-  //store
+  /** creating a new destino(recipients) **/
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
@@ -30,22 +30,22 @@ class DestinosController {
     }
 
     const newDestinos = await Destinos.create(req.body);
-    //console.log(newDestinos);
-    res.status(200).json({
+
+    return res.status(200).json({
       newDestinos
     });
   }
-  //index
+
+  /** list all destinos (recipients) **/
   async index(req, res) {
     const allDestinos = await Destinos.findAll();
-    res.status(200).json({
+    return res.status(200).json({
       allDestinos
     });
   }
 
-  //update
+  /** updating a destino(recipients) **/
   async update(req, res) {
-    console.log(req.body.params);
     const destino = await Destinos.findByPk(req.params.id);
     const schema = Yup.object().shape({
       name: Yup.string(),
@@ -64,8 +64,8 @@ class DestinosController {
     }
 
     const updatedDestino = await destino.update(req.body);
-    //console.log(updatedDestino);
-    res.status(200).json({
+
+    return res.status(200).json({
       updatedDestino
     });
   }

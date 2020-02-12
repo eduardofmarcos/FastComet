@@ -32,10 +32,10 @@ routes.put('/destinos/:id', authMiddleware, destinosController.update);
 /** DELIVERYMAN**/
 routes.post('/files/avatar', upload.single('file'), filesController.store);
 
-routes.get('/deliverymen', deliverymenController.index);
-routes.post('/deliverymen', deliverymenController.store);
-routes.put('/deliverymen/:id', deliverymenController.update);
-routes.delete('/deliverymen/:id', deliverymenController.delete);
+routes.get('/deliverymen', authMiddleware, deliverymenController.index);
+routes.post('/deliverymen', authMiddleware, deliverymenController.store);
+routes.put('/deliverymen/:id', authMiddleware, deliverymenController.update);
+routes.delete('/deliverymen/:id', authMiddleware, deliverymenController.delete);
 
 /** DELIVERYMAN FUNCIONALITIES**/
 routes.get('/deliveryman/:id/deliveries', deliverymanController.index);
@@ -56,10 +56,10 @@ routes.put(
 
 /** ORDERS**/
 
-routes.get('/orders', orderController.index);
-routes.post('/orders', orderController.store);
-routes.put('/orders/:id', orderController.update);
-routes.delete('/orders/:id', orderController.delete);
+routes.get('/orders', authMiddleware, orderController.index);
+routes.post('/orders', authMiddleware, orderController.store);
+routes.put('/orders/:id', authMiddleware, orderController.update);
+routes.delete('/orders/:id', authMiddleware, orderController.delete);
 
 /** ORDERS PROBLEMS**/
 routes.get('/orders/problems', orderProblemsController.index);
@@ -69,5 +69,13 @@ routes.delete(
   '/orders/:problemId/cancel-order',
   orderProblemsController.delete
 );
+
+/** Global route error**/
+routes.all('*', (req, res, next) => {
+  res.status(404).json({
+    status: 'failed',
+    message: `Can not find ${req.originalUrl} on this server!`
+  });
+});
 
 export default routes;

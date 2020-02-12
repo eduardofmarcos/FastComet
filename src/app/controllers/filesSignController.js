@@ -2,7 +2,9 @@ import File from './../models/Files';
 import Orders from './../models/Orders';
 
 class FileController {
+  /** uploading a signature file and updating the order's signature_id **/
   async store(req, res, next) {
+    
     const name = req.file.originalname;
     const path = req.file.filename;
 

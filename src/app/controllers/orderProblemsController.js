@@ -2,13 +2,16 @@ import Order from './../models/Orders';
 import OrderProblems from './../models/OrderProblems';
 import Deliverymen from './../models/Deliverymen';
 import Mail from './../../lib/Mail';
+import * as Yup from 'yup';
 
 class orderProblemsController {
+  /** list all order problems **/
   async index(req, res) {
     const allOrdersProblems = await OrderProblems.findAll();
     return res.status(200).json(allOrdersProblems);
-  }
-
+  } 
+  
+  /** show all order problems by ID **/
   async show(req, res) {
     const order_id = req.params.id;
     const allOrdersProblemsbyId = await OrderProblems.findAll({
@@ -19,8 +22,19 @@ class orderProblemsController {
     return res.status(200).json(allOrdersProblemsbyId);
   }
 
+  /** creating new order problem **/
   async store(req, res) {
     const orderToProblemId = req.params.id;
+
+    const schema = Yup.object().shape({
+      description: Yup.string().required()
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({
+        message: 'Invalid Fields!'
+      });
+    }
 
     const newProblem = await OrderProblems.create({
       order_id: orderToProblemId,
@@ -30,17 +44,10 @@ class orderProblemsController {
     return res.status(201).json(newProblem);
   }
 
-  async update(req, res) {
-    const orderId = req.params.id;
-    const orderToUpdate = await Order.findByPk(orderId);
-    const dataToUpdate = req.body;
-    const orderUpdated = await orderToUpdate.update(dataToUpdate);
-    return res.status(200).json(orderUpdated);
-  }
-
   async delete(req, res) {
+    /** deleting a order by problem id **/
     const problemId = req.params.problemId;
-    console.log(problemId);
+
     const problemToDelete = await OrderProblems.findByPk(problemId);
 
     const idDescription = problemToDelete.description;
@@ -49,7 +56,7 @@ class orderProblemsController {
         id: problemToDelete.order_id
       }
     });
-    //deliveryman_id
+
     const deliverymanInfo = await Deliverymen.findOne({
       where: {
         id: orderInfo.deliveryman_id
@@ -58,8 +65,9 @@ class orderProblemsController {
 
     //console.log(deliverymanInfo);
     //onsole.log(idDescription);
-    console.log(orderInfo.product);
+    //console.log(orderInfo.product);
 
+    /** sending a email to inform the cancellation **/
     await Mail.sendMail({
       to: `${deliverymanInfo.name} < ${deliverymanInfo.email} >`,
       subject: `O produto ${orderInfo.product} abaixo foi cancelado: `,

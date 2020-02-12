@@ -1,10 +1,27 @@
 import jwt from 'jsonwebtoken';
 import User from './../models/Users';
 import auth from './../../config/auth';
+import * as Yup from 'yup';
 
 class SessionController {
+  /** login admin user **/
   async store(req, res) {
     const { email, password } = req.body;
+
+    const schema = Yup.object().shape({
+      email: Yup.string()
+        .email()
+        .required(),
+      password: Yup.string()
+        .required()
+        .min(5)
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({
+        message: 'Invalid Fields!'
+      });
+    }
 
     const user = await User.findOne({ where: { email } });
 
