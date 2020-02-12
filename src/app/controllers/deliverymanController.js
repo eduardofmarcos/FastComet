@@ -1,4 +1,5 @@
 import Orders from './../models/Orders';
+import Deliverymen from './../models/Deliverymen';
 import { Op } from 'sequelize';
 import { startOfDay, endOfDay, parseISO } from 'date-fns';
 
@@ -29,6 +30,15 @@ class DeliverymanController {
       };
     }
 
+    const checkDeliverymanExist = await Deliverymen.findOne({
+      where: { id: deliverymanId }
+    });
+    if (!checkDeliverymanExist) {
+      return res.status(400).json({
+        message: 'Deliveryman not found!'
+      });
+    }
+
     const deliveryMan = await Orders.findAll({
       where
     });
@@ -40,6 +50,32 @@ class DeliverymanController {
   async update(req, res) {
     const orderToUpdate = await Orders.findByPk(req.params.orderId);
     const deliverymanId = req.params.id;
+
+    const checkDeliverymanExist = await Deliverymen.findOne({
+      where: { id: deliverymanId }
+    });
+    if (!checkDeliverymanExist) {
+      return res.status(400).json({
+        message: 'Deliveryman not found!'
+      });
+    }
+
+    const checkOrderExist = await Orders.findOne({
+      where: { id: req.params.orderId }
+    });
+    if (!checkOrderExist) {
+      return res.status(400).json({
+        message: 'Order not found!'
+      });
+    }
+
+    const checkOrderDeliveryman = orderToUpdate.deliveryman_id;
+
+    if (checkOrderDeliveryman !== Number(deliverymanId)) {
+      return res
+        .status(401)
+        .json({ message: 'Order does not match deliveryman!' });
+    }
 
     const { start_date, end_date } = req.body;
 

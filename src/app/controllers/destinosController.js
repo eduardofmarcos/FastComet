@@ -63,6 +63,15 @@ class DestinosController {
       });
     }
 
+    const checkDestinoExist = await Destinos.findOne({
+      where: { id: req.params.id }
+    });
+    if (!checkDestinoExist) {
+      return res.status(400).json({
+        message: 'Destino not found!'
+      });
+    }
+
     const updatedDestino = await destino.update(req.body);
 
     return res.status(200).json({

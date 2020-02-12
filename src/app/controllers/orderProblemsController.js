@@ -9,11 +9,21 @@ class orderProblemsController {
   async index(req, res) {
     const allOrdersProblems = await OrderProblems.findAll();
     return res.status(200).json(allOrdersProblems);
-  } 
-  
+  }
+
   /** show all order problems by ID **/
   async show(req, res) {
     const order_id = req.params.id;
+
+    const checkOrderExist = await Order.findOne({
+      where: { id: order_id }
+    });
+    if (!checkOrderExist) {
+      return res.status(400).json({
+        message: 'Order not found!'
+      });
+    }
+
     const allOrdersProblemsbyId = await OrderProblems.findAll({
       where: {
         order_id
@@ -36,6 +46,15 @@ class orderProblemsController {
       });
     }
 
+    const checkOrderExist = await Order.findOne({
+      where: { id: orderToProblemId }
+    });
+    if (!checkOrderExist) {
+      return res.status(400).json({
+        message: 'Order not found!'
+      });
+    }
+
     const newProblem = await OrderProblems.create({
       order_id: orderToProblemId,
       description: req.body.description
@@ -49,6 +68,15 @@ class orderProblemsController {
     const problemId = req.params.problemId;
 
     const problemToDelete = await OrderProblems.findByPk(problemId);
+
+    const checkOrderProblemExist = await OrderProblems.findOne({
+      where: { id: problemId }
+    });
+    if (!checkOrderProblemExist) {
+      return res.status(400).json({
+        message: 'Order problem not found!'
+      });
+    }
 
     const idDescription = problemToDelete.description;
     const orderInfo = await Order.findOne({

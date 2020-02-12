@@ -48,6 +48,15 @@ class DeliverymenController {
       });
     }
 
+    const checkDeliverymanExist = await Deliverymen.findOne({
+      where: { id: deliId }
+    });
+    if (!checkDeliverymanExist) {
+      return res.status(400).json({
+        message: 'Deliveryman not found!'
+      });
+    }
+
     const deliUpdated = await deliToUpdate.update(req.body);
     return res.status(200).json({
       message: deliUpdated
@@ -56,13 +65,26 @@ class DeliverymenController {
 
   /** delete a deliveryman **/
   async delete(req, res) {
-    const deliId = req.params.id;
-    const deliToDelete = await Deliverymen.findByPk(deliId);
+    try {
+      const deliId = req.params.id;
+      const deliToDelete = await Deliverymen.findByPk(deliId);
 
-    const deliDeleted = await deliToDelete.destroy();
-    return res.status(200).json({
-      message: deliDeleted
-    });
+      const checkDeliverymanExist = await Deliverymen.findOne({
+        where: { id: deliId }
+      });
+      if (!checkDeliverymanExist) {
+        return res.status(400).json({
+          message: 'Deliveryman not found!'
+        });
+      }
+
+      const deliDeleted = await deliToDelete.destroy();
+      return res.status(200).json({
+        message: deliDeleted
+      });
+    } catch (error) {
+      return res.status(400).json(error);
+    }
   }
 }
 

@@ -3,6 +3,7 @@ import { isBefore, isAfter, parseISO } from 'date-fns';
 import Deliverymen from './../models/Deliverymen';
 import Mail from './../../lib/Mail';
 import * as Yup from 'yup';
+import Destinos from './../models/Destinos';
 
 class orderController {
   /** list all orders **/
@@ -28,6 +29,24 @@ class orderController {
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({
         message: 'Invalid Fields!'
+      });
+    }
+
+    const checkDestinoIdExist = await Destinos.findOne({
+      where: { id: req.body.destinos_id }
+    });
+    if (!checkDestinoIdExist) {
+      return res.status(400).json({
+        message: 'Destination not found!'
+      });
+    }
+
+    const checkDeliverymanIdExist = await Deliverymen.findOne({
+      where: { id: req.body.deliveryman_id }
+    });
+    if (!checkDeliverymanIdExist) {
+      return res.status(400).json({
+        message: 'Deliveryman not found!'
       });
     }
 
@@ -87,6 +106,18 @@ class orderController {
         message: 'Invalid Fields!'
       });
     }
+
+    
+
+    const checkOrderExist = await Order.findOne({
+      where: { id: orderId }
+    });
+    if (!checkOrderExist) {
+      return res.status(400).json({
+        message: 'Order not found!'
+      });
+    }
+
     const orderUpdated = await orderToUpdate.update(dataToUpdate);
     return res.status(200).json(orderUpdated);
   }
@@ -95,6 +126,16 @@ class orderController {
   async delete(req, res) {
     const orderId = req.params.id;
     const orderTodelete = await Order.findByPk(orderId);
+
+    const checkOrderExist = await Order.findOne({
+      where: { id: orderId }
+    });
+    if (!checkOrderExist) {
+      return res.status(400).json({
+        message: 'Order not found!'
+      });
+    }
+
     await orderTodelete.destroy();
     return res.status(200).json();
   }
