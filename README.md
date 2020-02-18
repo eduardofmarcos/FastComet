@@ -3,6 +3,16 @@
 ### Overview:
 A NodeJS API for a shipping company. 
 
+### Features:
+
+CRUD operations on:
+
+* Register Admin Users
+* Register Recipients
+* Register Deliverymen
+* Register Orders
+* Log in using token JWT
+
 ### Built with:
 
 * Docker
