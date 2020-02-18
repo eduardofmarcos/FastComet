@@ -11,7 +11,7 @@ CRUD operations on:
 * Register Recipients
 * Register Deliverymen
 * Register Orders
-* Log in using token JWT
+* Log in sessions using token JWT
 * Uploading files using Multer and FileSystem
 * Sendind Cancellation and New Orders e-mails to deliveryman using NodeMailer
 
