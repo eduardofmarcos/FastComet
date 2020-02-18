@@ -1,5 +1,5 @@
 {
-  "name": "fastfeet",
+  "name": "fastcomet",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,16 +7,8 @@
     "dev": "nodemon src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/eduardofmarcos/FastFeet.git"
-  },
   "author": "Eduardo Marcos",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/eduardofmarcos/FastFeet/issues"
-  },
-  "homepage": "https://github.com/eduardofmarcos/FastFeet#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "bee-queue": "^1.2.3",
