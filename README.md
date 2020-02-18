@@ -27,3 +27,7 @@ A NodeJS API for a shipping company.
     "sequelize": "^5.21.3",
     "youch": "^2.0.10",
     "yup": "^0.28.1"
+
+### How to run:
+
+"dev": "nodemon src/server.js"
