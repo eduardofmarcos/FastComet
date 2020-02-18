@@ -1,7 +1,7 @@
 # FastComet
 
 ### Overview:
-A NodeJS API for a shipping company. 
+A Node.js API for a shipping company. 
 
 ### Features:
 
